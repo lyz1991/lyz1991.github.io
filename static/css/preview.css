@@ -55,3 +55,6 @@
 .product-item {
     margin-left: 10px;
 }
+img {
+    vertical-align: middle;
+}
