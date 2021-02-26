@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+     * {
+       margin: 0;
+       padding: 0;
+     }
+    .br {
+      width: 100%;
+      height: 20px;
+      background-color: black;
+    }
+    canvas {
+      display: block;
+      margin: 0 auto;
+    }
+    video {
+      display: block;
+      margin: 20px auto;
+    }
+  </style>
+</head>
+<body>
+<canvas width="300" height="300" id="canvas">
+
+</canvas>
+<video id="video" controls="controls"></video>
+<a href="" id="down" download="my.mp4">下载</a>
+<button id="btn">开始录制</button>
+<button id="stop">停止录制</button>
+</body>
+<script>
+  const canvas = document.getElementById('canvas')
+  const ctx = canvas.getContext('2d')
+  const h = canvas.height
+  const w = canvas.width
+  ctx.moveTo(0, 0)
+  let Timer, Media, data = []
+
+  ctx.stroke()
+  let Vx = 20, Vy = 20
+  function Draw() {
+    ctx.clearRect(0, 0, w, h)
+    ctx.lineTo(Vx, Vy)
+    ctx.stroke()
+    if (Vx < w) {
+      Vx += 1
+    } else {
+      cancelAnimationFrame(Timer)
+
+    }
+    if (Vy < h) {
+      Vy += 1
+    } else {
+      cancelAnimationFrame(Timer)
+    }
+    Timer = requestAnimationFrame(Draw)
+  }
+  const constraints = {
+    video: true,
+    audio: false
+  };
+  document.getElementById('btn').addEventListener('click', async () =>{
+    const res = await navigator.mediaDevices.getDisplayMedia(constraints)
+    Media = new MediaRecorder(res, {mineType:  'video/mp4'})
+    Media.start()
+    Media.ondataavailable = function(e) {
+      console.log('d', e.data)
+      data.push(e.data)
+    }
+    Media.onstop = function () {
+      const url = URL.createObjectURL(new Blob(data, {mineType:  'video/mp4'}))
+      document.getElementById('down').setAttribute('href', url)
+
+      document.getElementById('video').setAttribute('src', url)
+    }
+    Draw()
+  })
+  document.getElementById('stop').addEventListener('click', () => {
+    cancelAnimationFrame(Timer)
+    Media.stop()
+  })
+
+</script>
+</html>
