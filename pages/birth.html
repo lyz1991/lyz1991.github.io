@@ -5,8 +5,7 @@
     <title>生日快乐</title>
 </head>
 <body>
-<input type="range" id="radio">
-<p>HAPPY BIRTHDAY TO YOU, CLICK HEART</p>
+<p>HAPPY BIRTHDAY TO YOU</p>
 <div id="heart"></div>
 <canvas id="mycanvas"></canvas>
 </body>
@@ -15,6 +14,8 @@
     const sc = document.createElement('script')
     sc.src = "../build/birth/birth.js"
     document.body.appendChild(sc)
+  }, {
+    once: true
   })
 </script>
 </html>
