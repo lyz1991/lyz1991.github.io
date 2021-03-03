@@ -27,6 +27,7 @@
 <canvas width="300" height="300" id="canvas">
 
 </canvas>
+<input type="file" id="file">
 <video id="video" controls="controls"></video>
 <a href="" id="down" download="my.mp4">下载</a>
 <button id="btn">开始录制</button>
@@ -72,16 +73,30 @@
       data.push(e.data)
     }
     Media.onstop = function () {
-      const url = URL.createObjectURL(new Blob(data, {mineType:  'video/mp4'}))
-      document.getElementById('down').setAttribute('href', url)
+      // const url = URL.createObjectURL(new Blob(data, {mineType:  'video/mp4'}))
+      const Fr = new FileReader()
+      Fr.onload = function (e) {
+        document.getElementById('video').setAttribute('src', e.target.result)
+      }
+      console.log('ss', new Blob(data, {type:  'video/mp4'}))
+      Fr.readAsDataURL(new Blob(data, {type:  'video/mp4'}))
+      // document.getElementById('down').setAttribute('href', url)
 
-      document.getElementById('video').setAttribute('src', url)
+      // document.getElementById('video').setAttribute('src', url)
     }
     Draw()
   })
   document.getElementById('stop').addEventListener('click', () => {
     cancelAnimationFrame(Timer)
     Media.stop()
+  })
+  document.getElementById('file').addEventListener('change', e => {
+    console.log(e, e.target)
+    const Fr = new FileReader()
+    Fr.onload = function (e) {
+      document.getElementById('video').setAttribute('src', e.target.result)
+    }
+    Fr.readAsDataURL(e.target.files[0])
   })
 
 </script>

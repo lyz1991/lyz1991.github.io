@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<audio id="audio" src="" controls> </audio>
+<button id="btn">说话</button>
+<button id="stop">停止</button>
+</body>
+<script>
+
+
+
+
+
+
+
+  document.getElementById('btn').addEventListener('click', () => {
+    navigator.mediaDevices.getUserMedia({audio: true}).then(res => {
+      console.log('res', res)
+      res.onend = function (e) {
+        console.log('111221',e)
+      }
+      var data = []
+      Media = new MediaRecorder(res, {mineType:  'audio/mp3'})
+      Media.start()
+      Media.ondataavailable = function(e) {
+        console.log('d', e.data)
+        data.push(e.data)
+      }
+      Media.onstop = function () {
+        // const url = URL.createObjectURL(new Blob(data, {mineType:  'video/mp4'}))
+        const Fr = new FileReader()
+        Fr.onload = function (e) {
+          document.getElementById('audio').setAttribute('src', e.target.result)
+        }
+        Fr.readAsDataURL(new Blob(data, {type:  'audio/mp3'}))
+        // document.getElementById('down').setAttribute('href', url)
+
+        // document.getElementById('video').setAttribute('src', url)
+      }
+      document.getElementById('stop').addEventListener('click', () => {
+        Media.stop()
+        res.getTracks().forEach(track => track.stop())
+      })
+    } )
+  })
+</script>
+</html>
